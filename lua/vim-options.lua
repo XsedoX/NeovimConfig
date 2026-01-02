@@ -1,75 +1,84 @@
-vim.cmd("set expandtab")
-vim.cmd("set tabstop=4")
-vim.cmd("set softtabstop=4")
-vim.cmd("set shiftwidth=4")
-vim.g.mapleader = " "
-
+vim.opt.expandtab = true
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
 vim.opt.swapfile = false
+vim.opt.number = true
+vim.opt.relativenumber = true
 
-vim.wo.number = true
-vim.wo.relativenumber = true
+vim.opt.termguicolors = true
+vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+vim.opt.undofile = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.clipboard = "unnamedplus" -- Sync with system clipboard
 
---saving file
-vim.keymap.set("n", "<leader>w", ":w<CR>")
-vim.keymap.set("n", "<leader>q", ":q<CR>")
-vim.keymap.set("n", "<leader>x", ":x<CR>")
-vim.keymap.set("n", "<leader>s", ":source %<CR>")
-vim.keymap.set("i", "<C-s>", "<Esc>")
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
---split windows
-vim.keymap.set("n", "<leader>sv", ":vsplit<CR>")
-vim.keymap.set("n", "<leader>sh", ":split<CR>")
-vim.keymap.set("n", "<leader>se", "<C-w>=")
-vim.keymap.set("n", "<leader>sx", ":close<CR>")
+-- Saving/quitting
+vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save file" })
+vim.keymap.set("n", "<leader>q", ":q<CR>", { desc = "Quit" })
+vim.keymap.set("n", "<leader>x", ":x<CR>", { desc = "Save and quit" })
 
---resize windows
-vim.keymap.set("n", "<C-up>", ":resize +2<CR>")
-vim.keymap.set("n", "<C-Down>", ":resize -2<CR>")
-vim.keymap.set("n", "<C-left>", ":vertical resize -2<CR>")
-vim.keymap.set("n", "<C-right>", ":vertical resize +2<CR>")
+-- Split windows
+vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split vertical" })
+vim.keymap.set("n", "<leader>sh", ": split<CR>", { desc = "Split horizontal" })
+vim.keymap.set("n", "<leader>se", "<C-w>=", { desc = "Equalize split sizes" })
+vim.keymap.set("n", "<leader>sx", ":close<CR>", { desc = "Close split" })
 
---move lines up/down
-vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
-vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
-vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
+-- Resize windows
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window height" })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<C-Right>", ": vertical resize +2<CR>", { desc = "Increase window width" })
 
---better indenting (stay in visual mode)
-vim.keymap.set("v", "<", "<gv")
-vim.keymap.set("v", ">", ">gv")
+-- Move lines up/down
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
---better new line (stay in normal mode)
-vim.keymap.set("n", "<Enter>", "o<Esc>")
-vim.keymap.set("n", "<S-Enter>", "O<Esc>")
+-- Better indenting (stay in visual mode)
+vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
+vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 
---paste without yanking replaced text
-vim.keymap.set("v", "p", "\"_dP")
+-- Better new line (stay in normal mode)
+vim.keymap.set("n", "<Enter>", "o<Esc>", { desc = "New line below" })
+vim.keymap.set("n", "<S-Enter>", "O<Esc>", { desc = "New line above" })
 
---delete without yanking
-vim.keymap.set("n", "<leader>d", "\"_d")
-vim.keymap.set("v", "<leader>d", "\"_d")
+-- Paste without yanking replaced text
+vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking" })
 
---keep cursor centered while jumping
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
-vim.keymap.set("n", "n", "nzzzv")
-vim.keymap.set("n", "N", "Nzzzv")
-vim.keymap.set("n", "G", "Gzz") 
+-- Delete without yanking
+vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete without yanking" })
+vim.keymap.set("v", "<leader>d", '"_d', { desc = "Delete selection without yanking" })
 
---disable arrow keys in normal mode
-vim.keymap.set("n", "<Up>", "<Nop>")
-vim.keymap.set("n", "<Down>", "<Nop>")
-vim.keymap.set("n", "<Left>", "<Nop>")
-vim.keymap.set("n", "<Right>", "<Nop>")
+-- Keep cursor centered while jumping
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
+vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
+vim.keymap.set("n", "G", "Gzz", { desc = "Go to end of file (centered)" })
 
---yank to system clipboard
-vim.keymap.set("n", "<leader>y", "\"+y")
-vim.keymap.set("v", "<leader>y", "\"+y")
-vim.keymap.set("n", "<leader>Y", "\"+Y")
+-- Disable arrow keys in normal mode
+vim.keymap.set("n", "<Up>", "<Nop>", { desc = "Disabled" })
+vim.keymap.set("n", "<Down>", "<Nop>", { desc = "Disabled" })
+vim.keymap.set("n", "<Left>", "<Nop>", { desc = "Disabled" })
+vim.keymap.set("n", "<Right>", "<Nop>", { desc = "Disabled" })
+vim.keymap.set("n", "<C-c>", "<Nop>", { desc = "Disabled" })
 
---paste to system clipboard
-vim.keymap.set("n", "<leader>p", "\"+p")
-vim.keymap.set("v", "<leader>p", "\"+p")
+-- Yank to system clipboard
+vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to clipboard" })
+vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank selection to clipboard" })
+vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "Yank line to clipboard" })
 
---clear search hightlight
-vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
+-- Paste from system clipboard
+vim.keymap.set("n", "<leader>p", '"+p', { desc = "Paste from clipboard" })
+vim.keymap.set("n", "<leader>P", '"+P', { desc = "Paste from clipboard before cursor" })
+vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste from clipboard" })
+
+-- Clear search highlight
+vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>", { desc = "Clear search highlight" })
