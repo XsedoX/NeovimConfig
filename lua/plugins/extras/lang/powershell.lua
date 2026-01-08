@@ -21,6 +21,7 @@ return {
   -- PowerShell LSP and features
   {
     "TheLeoP/powershell.nvim",
+    ft = { "ps1", "psm1", "psd1" },
     opts = function()
       return {
         bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
