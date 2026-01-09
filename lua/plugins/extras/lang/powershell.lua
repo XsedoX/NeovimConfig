@@ -32,24 +32,71 @@ return {
   {
     "TheLeoP/powershell.nvim",
     ft = { "ps1", "psm1", "psd1" },
-    dependecies = {
+    dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "mason-org/mason.nvim",
     },
-    opts = function()
-      return {
-        bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
-        -- DAP Config: This overrides the crashing default
-        dap_configuration = {
-          type = "powershell",
-          request = "launch",
-          name = "Launch file",
-          program = "${file}",
-          args = {},
-          -- "integratedTerminal" (default) crashes. "internalConsole" works.
-          console = "internalConsole",
-        },
-      }
+    opts = {
+      bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
+    },
+    config = function(_, opts)
+      local powershell = require("powershell")
+      powershell.setup(opts)
+
+      -- FIX A: Manually overwrite DAP adapter to remove -NoProfile
+      local dap = require("dap")
+      dap.adapters.ps1 = function(on_config)
+        local bundle_path = opts.bundle_path
+        local shell = "pwsh"
+        local file = bundle_path .. "/PowerShellEditorServices/Start-EditorServices.ps1"
+        local log_file_path = vim.fn.stdpath("cache") .. "/powershell_es.dap.log"
+        local session_file_path = vim.fn.stdpath("cache") .. "/powershell_es.session.json"
+
+        -- Construct command WITHOUT "-NoProfile"
+        local cmd = {
+          shell,
+          "-NoLogo",
+          -- "-NoProfile", -- REMOVED
+          "-NonInteractive",
+          "-File",
+          file,
+          "-HostName",
+          "nvim",
+          "-HostProfileId",
+          "Neovim",
+          "-HostVersion",
+          "1.0.0",
+          "-LogPath",
+          log_file_path,
+          "-LogLevel",
+          "Warning",
+          "-BundledModulesPath",
+          bundle_path,
+          "-DebugServiceOnly",
+          "-SessionDetailsPath",
+          session_file_path,
+        }
+
+        vim.system(cmd)
+
+        -- Wait for the session file to initialize
+        require("powershell.util").wait_for_session_file(session_file_path, function(details, err)
+          if err then
+            return vim.notify(err, vim.log.levels.ERROR)
+          end
+          on_config({
+            type = "pipe",
+            pipe = details.debugServicePipeName,
+          })
+        end)
+      end
+
+      -- FIX B: Fix the "LSP Not Enabled" error (Race Condition)
+      -- If the file is already open, the Filetype event passed before the plugin loaded.
+      -- We manually trigger attachment for the current buffer.
+      if vim.bo.filetype == "ps1" or vim.bo.filetype == "psm1" then
+        powershell.initialize_or_attach(0)
+      end
     end,
     keys = {
       {
@@ -67,7 +114,7 @@ return {
         end,
         mode = { "n", "x" },
         ft = { "ps1", "psm1", "psd1" },
-        desc = "Eval PowerShell Expression",
+        desc = "Run Selected Text",
       },
     },
   },
