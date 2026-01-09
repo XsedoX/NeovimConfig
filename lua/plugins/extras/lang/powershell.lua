@@ -18,13 +18,37 @@ return {
     "mason-org/mason.nvim",
     opts = { ensure_installed = { "powershell-editor-services" } },
   },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      setup = {
+        powershell_es = function()
+          return true -- Return true to disable lspconfig's default setup
+        end,
+      },
+    },
+  },
   -- PowerShell LSP and features
   {
     "TheLeoP/powershell.nvim",
     ft = { "ps1", "psm1", "psd1" },
+    dependecies = {
+      "nvim-treesitter/nvim-treesitter",
+      "mason-org/mason.nvim",
+    },
     opts = function()
       return {
         bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
+        -- DAP Config: This overrides the crashing default
+        dap_configuration = {
+          type = "powershell",
+          request = "launch",
+          name = "Launch file",
+          program = "${file}",
+          args = {},
+          -- "integratedTerminal" (default) crashes. "internalConsole" works.
+          console = "internalConsole",
+        },
       }
     end,
     keys = {
