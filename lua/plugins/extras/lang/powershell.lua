@@ -63,7 +63,7 @@ return {
           "-HostName",
           "nvim",
           "-HostProfileId",
-          "Neovim",
+          "Microsoft.PowerShell",
           "-HostVersion",
           "1.0.0",
           "-LogPath",
@@ -89,13 +89,6 @@ return {
             pipe = details.debugServicePipeName,
           })
         end)
-      end
-
-      -- FIX B: Fix the "LSP Not Enabled" error (Race Condition)
-      -- If the file is already open, the Filetype event passed before the plugin loaded.
-      -- We manually trigger attachment for the current buffer.
-      if vim.bo.filetype == "ps1" or vim.bo.filetype == "psm1" then
-        powershell.initialize_or_attach(0)
       end
     end,
     keys = {
