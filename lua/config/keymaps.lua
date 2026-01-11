@@ -4,7 +4,10 @@
 local km = vim.keymap
 local opts = { noremap = true, silent = true }
 
-km.set("n", "<C-d>", "<C-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll half down (centered)" }))
-km.set("v", "<C-d>", "<C-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll half down (centered)" }))
-km.set("v", "<C-u>", "<C-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll half up (centered)" }))
-km.set("n", "<C-u>", "<C-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll half up (centered)" }))
+--#region scrolling
+km.set("n", "<c-d>", "<c-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll half down (centered)" }))
+km.set("v", "<c-d>", "<c-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll half down (centered)" }))
+km.set("v", "<c-u>", "<c-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll half up (centered)" }))
+km.set("n", "<c-u>", "<c-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll half up (centered)" }))
+--#endregion
+km.set("t", "<Esc><Esc>", [[<C-\><C-n>]], opts)
