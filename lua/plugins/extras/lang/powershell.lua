@@ -21,11 +21,16 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = {
-      setup = {
-        powershell_es = function()
-          return true -- Return true to disable lspconfig's default setup
-        end,
+      servers = {
+        powershell_es = {
+          enabled = false,
+        },
       },
+    },
+    setup = {
+      powershell_es = function()
+        return true
+      end,
     },
   },
   -- PowerShell LSP and features
