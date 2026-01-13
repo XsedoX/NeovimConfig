@@ -8,3 +8,4 @@ if LazyVim.is_win() then
     LazyVim.terminal.setup("powershell")
   end
 end
+vim.g.root_spec = { "cwd" }
