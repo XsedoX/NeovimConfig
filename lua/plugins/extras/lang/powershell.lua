@@ -44,58 +44,11 @@ return {
     opts = {
       bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
     },
-    config = function(_, opts)
-      local powershell = require("powershell")
-      powershell.setup(opts)
-
-      -- FIX A: Manually overwrite DAP adapter to remove -NoProfile
-      local dap = require("dap")
-      dap.adapters.ps1 = function(on_config)
-        local bundle_path = opts.bundle_path
-        local shell = "pwsh"
-        local file = bundle_path .. "/PowerShellEditorServices/Start-EditorServices.ps1"
-        local log_file_path = vim.fn.stdpath("cache") .. "/powershell_es.dap.log"
-        local session_file_path = vim.fn.stdpath("cache") .. "/powershell_es.session.json"
-
-        -- Construct command WITHOUT "-NoProfile"
-        local cmd = {
-          shell,
-          "-NoLogo",
-          -- "-NoProfile", -- REMOVED
-          "-NonInteractive",
-          "-File",
-          file,
-          "-HostName",
-          "nvim",
-          "-HostProfileId",
-          "Microsoft.PowerShell",
-          "-HostVersion",
-          "1.0.0",
-          "-LogPath",
-          log_file_path,
-          "-LogLevel",
-          "Warning",
-          "-BundledModulesPath",
-          bundle_path,
-          "-DebugServiceOnly",
-          "-SessionDetailsPath",
-          session_file_path,
-        }
-
-        vim.system(cmd)
-
-        -- Wait for the session file to initialize
-        require("powershell.util").wait_for_session_file(session_file_path, function(details, err)
-          if err then
-            return vim.notify(err, vim.log.levels.ERROR)
-          end
-          on_config({
-            type = "pipe",
-            pipe = details.debugServicePipeName,
-          })
-        end)
-      end
-    end,
+    settings = {
+      powershell = {
+        enableProfileLoading = true,
+      },
+    },
     keys = {
       {
         "<leader>cP",
@@ -121,5 +74,58 @@ return {
   {
     "mfussenegger/nvim-dap",
     optional = true,
+    opts = function(opts)
+      local dap = require("dap")
+      dap.adapters.ps1 = function(on_config)
+        local bundle_path = opts.bundle_path
+        local shell = "pwsh"
+        local file = bundle_path .. "/PowerShellEditorServices/Start-EditorServices.ps1"
+        local log_file_path = vim.fn.stdpath("cache") .. "/powershell_es.dap.log"
+        local session_file_path = vim.fn.stdpath("cache") .. "/powershell_es.session.json"
+        local config = require("powershell.config").config
+
+        -- Construct command WITHOUT "-NoProfile"
+        local cmd = {
+          {
+            shell,
+            "-NoLogo",
+            --"-NoProfile",
+            "-NonInteractive",
+            "-File",
+            file,
+            "-HostName",
+            "nvim",
+            "-HostProfileId",
+            "Neovim",
+            "-HostVersion",
+            "1.0.0",
+            "-LogPath",
+            log_file_path,
+            "-LogLevel",
+            config.lsp_log_level,
+            --"-BundledModulesPath",
+            config.bundle_path,
+            --"-DebugServiceOnly",
+            -- TODO: wait for response on https://github.com/PowerShell/PowerShellEditorServices/issues/2164
+            -- "-EnableConsoleRepl",
+            "-SessionDetailsPath",
+            session_file_path,
+          },
+        }
+
+        vim.system(cmd)
+
+        -- Wait for the session file to initialize
+        require("powershell.util").wait_for_session_file(session_file_path, function(details, err)
+          if err then
+            return vim.notify(err, vim.log.levels.ERROR)
+          end
+          on_config({
+            type = "pipe",
+            pipe = details.debugServicePipeName,
+          })
+        end)
+      end
+    end,
   },
 }
