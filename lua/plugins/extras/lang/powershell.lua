@@ -30,6 +30,7 @@ return {
       "mason-org/mason.nvim",
     },
     opts = {
+      shell = "pwsh",
       bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
     },
     settings = {
@@ -39,45 +40,43 @@ return {
     },
     config = function(_, opts)
       require("powershell").setup(opts)
-      local ps_util = require("powershell.util")
       local dap = require("dap")
-      local temp_path = vim.fn.stdpath("cache")
-      local session_file_path = ("%s/powershell_es.temp_session.json"):format(temp_path)
-      session_file_path = vim.fs.normalize(session_file_path)
-      local log_file_path = ("%s/powershell_es.temp.log"):format(temp_path)
-      log_file_path = vim.fs.normalize(log_file_path)
-      vim.fn.delete(session_file_path)
 
       dap.adapters.ps1 = function(on_config)
+        local temp_path = vim.fn.stdpath("cache")
+        local session_file_path = ("%s/powershell_es.temp_session.json"):format(temp_path)
+        session_file_path = vim.fs.normalize(session_file_path)
+        local log_file_path = ("%s/powershell_es.temp.log"):format(temp_path)
+        log_file_path = vim.fs.normalize(log_file_path)
+        vim.fn.delete(session_file_path)
+        local ps_util = require("powershell.util")
         local file = ("%s/PowerShellEditorServices/Start-EditorServices.ps1"):format(opts.bundle_path)
         file = vim.fs.normalize(file)
         -- Construct command WITHOUT "-NoProfile"
         local cmd = {
-          {
-            opts.shell,
-            "-NoLogo",
-            --"-NoProfile",
-            "-NonInteractive",
-            "-File",
-            file,
-            "-HostName",
-            "nvim",
-            "-HostProfileId",
-            "Neovim",
-            "-HostVersion",
-            "1.0.0",
-            "-LogPath",
-            log_file_path,
-            "-LogLevel",
-            opts.lsp_log_level,
-            --"-BundledModulesPath",
-            opts.bundle_path,
-            --"-DebugServiceOnly",
-            -- TODO: wait for response on https://github.com/PowerShell/PowerShellEditorServices/issues/2164
-            -- "-EnableConsoleRepl",
-            "-SessionDetailsPath",
-            session_file_path,
-          },
+          opts.shell,
+          "-NoLogo",
+          --"-NoProfile",
+          "-NonInteractive",
+          "-File",
+          file,
+          "-HostName",
+          "nvim",
+          "-HostProfileId",
+          "Neovim",
+          "-HostVersion",
+          "1.0.0",
+          "-LogPath",
+          log_file_path,
+          "-LogLevel",
+          opts.lsp_log_level,
+          --"-BundledModulesPath",
+          opts.bundle_path,
+          --"-DebugServiceOnly",
+          -- TODO: wait for response on https://github.com/PowerShell/PowerShellEditorServices/issues/2164
+          -- "-EnableConsoleRepl",
+          "-SessionDetailsPath",
+          session_file_path,
         }
 
         vim.system(cmd)
