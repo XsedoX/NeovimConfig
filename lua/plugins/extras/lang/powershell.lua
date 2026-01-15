@@ -53,29 +53,37 @@ return {
         local log_file_path = vim.fn.stdpath("cache") .. "/powershell_es.dap.log"
         local session_file_path = vim.fn.stdpath("cache") .. "/powershell_es.session.json"
 
+        local ps_command = string.format(
+          [[
+          $ErrorActionPreference = "Stop"
+          
+          # 1. Manually load 'profile.ps1' (Current User, All Hosts)
+          # We check if it exists first to avoid errors
+          if ($PROFILE.CurrentUserAllHosts -and (Test-Path -Path $PROFILE.CurrentUserAllHosts)) {
+             . $PROFILE.CurrentUserAllHosts 
+          }
+
+          # 2. Start the Debugger in "Safe Mode" (-DebugServiceOnly)
+          # This prevents the "Pipe ENOENT" crash by not fighting with the main LSP
+          & '%s' -HostName nvim -HostProfileId Neovim -HostVersion 1.0.0 -LogPath '%s' -LogLevel Warning -DebugServiceOnly -SessionDetailsPath '%s'
+        ]],
+          file,
+          log_file_path,
+          session_file_path
+        )
+
+        -- Flatten command for execution
+        ps_command = ps_command:gsub("\n", "; ")
         -- Construct command WITHOUT "-NoProfile"
         local cmd = {
           shell,
           "-NoLogo",
-          -- "-NoProfile", -- REMOVED
+          "-NoProfile",
           "-NonInteractive",
-          "-File",
-          file,
-          "-HostName",
-          "nvim",
-          "-HostProfileId",
-          "Microsoft.PowerShell",
-          "-HostVersion",
-          "1.0.0",
-          "-LogPath",
-          log_file_path,
-          "-LogLevel",
-          "Warning",
-          "-BundledModulesPath",
-          bundle_path,
-          -- "-DebugServiceOnly",
-          "-SessionDetailsPath",
-          session_file_path,
+          "-ExecutionPolicy",
+          "-Bypass",
+          "-Command",
+          ps_command,
         }
 
         vim.system(cmd)
