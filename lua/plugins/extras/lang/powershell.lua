@@ -37,33 +37,11 @@ return {
         enableProfileLoading = true,
       },
     },
-    keys = {
-      {
-        "<leader>cP",
-        function()
-          require("powershell").toggle_term()
-        end,
-        ft = { "ps1", "psm1", "psd1" },
-        desc = "Toggle PowerShell Terminal",
-      },
-      {
-        "<leader>cE",
-        function()
-          require("powershell").eval()
-        end,
-        mode = { "n", "x" },
-        ft = { "ps1", "psm1", "psd1" },
-        desc = "Run Selected Text",
-      },
-    },
-  },
-
-  -- Optional: DAP support for debugging
-  {
-    "mfussenegger/nvim-dap",
-    optional = true,
-    opts = function(opts)
+    config = function(_, opts)
+      require("powershell").setup(opts)
+      local ps_util = require("powershell.util")
       local dap = require("dap")
+
       dap.adapters.ps1 = function(on_config)
         local bundle_path = opts.bundle_path
         local shell = "pwsh"
@@ -104,7 +82,7 @@ return {
         vim.system(cmd)
 
         -- Wait for the session file to initialize
-        require("powershell.util").wait_for_session_file(session_file_path, function(details, err)
+        ps_util.wait_for_session_file(session_file_path, function(details, err)
           if err then
             return vim.notify(err, vim.log.levels.ERROR)
           end
@@ -115,5 +93,30 @@ return {
         end)
       end
     end,
+    keys = {
+      {
+        "<leader>cP",
+        function()
+          require("powershell").toggle_term()
+        end,
+        ft = { "ps1", "psm1", "psd1" },
+        desc = "Toggle PowerShell Terminal",
+      },
+      {
+        "<leader>cE",
+        function()
+          require("powershell").eval()
+        end,
+        mode = { "n", "x" },
+        ft = { "ps1", "psm1", "psd1" },
+        desc = "Run Selected Text",
+      },
+    },
+  },
+
+  -- Optional: DAP support for debugging
+  {
+    "mfussenegger/nvim-dap",
+    optional = true,
   },
 }
