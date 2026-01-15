@@ -1,3 +1,8 @@
+LazyVim.on_very_lazy(function()
+  vim.filetype.add({
+    razor = "razor",
+  })
+end)
 return {
   recommended = function()
     return LazyVim.extras.wants({
