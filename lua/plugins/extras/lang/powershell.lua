@@ -41,19 +41,20 @@ return {
       require("powershell").setup(opts)
       local ps_util = require("powershell.util")
       local dap = require("dap")
+      local temp_path = vim.fn.stdpath("cache")
+      local session_file_path = ("%s/powershell_es.temp_session.json"):format(temp_path)
+      session_file_path = vim.fs.normalize(session_file_path)
+      local log_file_path = ("%s/powershell_es.temp.log"):format(temp_path)
+      log_file_path = vim.fs.normalize(log_file_path)
+      vim.fn.delete(session_file_path)
 
       dap.adapters.ps1 = function(on_config)
-        local bundle_path = opts.bundle_path
-        local shell = "pwsh"
-        local file = bundle_path .. "/PowerShellEditorServices/Start-EditorServices.ps1"
-        local log_file_path = vim.fn.stdpath("cache") .. "/powershell_es.dap.log"
-        local session_file_path = vim.fn.stdpath("cache") .. "/powershell_es.session.json"
-        local config = require("powershell.config").config
-
+        local file = ("%s/PowerShellEditorServices/Start-EditorServices.ps1"):format(opts.bundle_path)
+        file = vim.fs.normalize(file)
         -- Construct command WITHOUT "-NoProfile"
         local cmd = {
           {
-            shell,
+            opts.shell,
             "-NoLogo",
             --"-NoProfile",
             "-NonInteractive",
@@ -68,9 +69,9 @@ return {
             "-LogPath",
             log_file_path,
             "-LogLevel",
-            config.lsp_log_level,
+            opts.lsp_log_level,
             --"-BundledModulesPath",
-            config.bundle_path,
+            opts.bundle_path,
             --"-DebugServiceOnly",
             -- TODO: wait for response on https://github.com/PowerShell/PowerShellEditorServices/issues/2164
             -- "-EnableConsoleRepl",
