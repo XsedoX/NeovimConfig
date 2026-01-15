@@ -70,7 +70,7 @@ return {
           log_file_path,
           "-LogLevel",
           opts.lsp_log_level,
-          --"-BundledModulesPath",
+          "-BundledModulesPath",
           opts.bundle_path,
           --"-DebugServiceOnly",
           -- TODO: wait for response on https://github.com/PowerShell/PowerShellEditorServices/issues/2164
