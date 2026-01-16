@@ -47,6 +47,51 @@ return {
         enableProfileLoading = true,
       },
     },
+    config = function(_, opts)
+      local powershell = require("powershell")
+      powershell.setup(opts)
+      local ps_util = require("powershell.util")
+
+      -- FIX A: Manually overwrite DAP adapter to remove -NoProfile
+      local dap = require("dap")
+      dap.adapters.ps1 = function(on_config)
+        local bundle_path = opts.bundle_path
+        local shell = "pwsh"
+        local file = bundle_path .. "/PowerShellEditorServices/Start-EditorServices.ps1"
+        local log_file_path = vim.fn.stdpath("cache") .. "/powershell_es.dap.log"
+        local session_file_path = vim.fn.stdpath("cache") .. "/powershell_es.session.json"
+
+        -- HACK:workaournd to load profie
+        local ps_command = string.format(
+          "if ($PROFILE.CurrentUserAllHosts -and (Test-Path -Path $PROFILE.CurrentUserAllHosts)) { . $PROFILE.CurrentUserAllHosts }; & '%s' -HostName nvim -HostProfileId Neovim -HostVersion 1.0.0 -LogPath '%s' -LogLevel Warning -DebugServiceOnly -SessionDetailsPath '%s'",
+          file,
+          log_file_path,
+          session_file_path
+        )
+        -- Construct command WITHOUT "-NoProfile"
+        local cmd = {
+          shell,
+          "-NoLogo",
+          "-NoProfile",
+          "-NonInteractive",
+          "-Command",
+          ps_command,
+        }
+
+        vim.system(cmd)
+
+        -- Wait for the session file to initialize
+        ps_util.wait_for_session_file(session_file_path, function(details, err)
+          if err then
+            return vim.notify(err, vim.log.levels.ERROR)
+          end
+          on_config({
+            type = "pipe",
+            pipe = details.debugServicePipeName,
+          })
+        end)
+      end
+    end,
     keys = {
       {
         "<leader>cP",
