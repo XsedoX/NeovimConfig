@@ -20,6 +20,16 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        powershell_es = { enabled = false },
+      },
+    },
+    setup = {
+      powershell_es = function()
+        return true
+      end,
+    },
   },
   -- PowerShell LSP and features
   {
