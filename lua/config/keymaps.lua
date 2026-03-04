@@ -12,6 +12,16 @@ km.set("n", "<c-u>", "<c-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll h
 km.set("n", "G", "Gzz", vim.tbl_extend("force", opts, { desc = "Go to the end of the file (centered)" }))
 km.set("v", "G", "Gzz", vim.tbl_extend("force", opts, { desc = "Go to the end of the file (centered)" }))
 --#endregion
+--#region window resize (Alt+Arrow to match WezTerm)
+km.del("n", "<C-Up>")
+km.del("n", "<C-Down>")
+km.del("n", "<C-Left>")
+km.del("n", "<C-Right>")
+km.set("n", "<A-Up>", "<cmd>resize +2<cr>", vim.tbl_extend("force", opts, { desc = "Increase Window Height" }))
+km.set("n", "<A-Down>", "<cmd>resize -2<cr>", vim.tbl_extend("force", opts, { desc = "Decrease Window Height" }))
+km.set("n", "<A-Left>", "<cmd>vertical resize -2<cr>", vim.tbl_extend("force", opts, { desc = "Decrease Window Width" }))
+km.set("n", "<A-Right>", "<cmd>vertical resize +2<cr>", vim.tbl_extend("force", opts, { desc = "Increase Window Width" }))
+--#endregion
 --#region escapes
 km.set("t", "<Esc><Esc>", [[<C-\><C-n>]], vim.tbl_extend("force", opts, { desc = "Exit terminal mode" }))
 km.set("t", "jk", [[<C-\><C-n>]], vim.tbl_extend("force", opts, { desc = "Exit terminal mode" }))
