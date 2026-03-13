@@ -2,7 +2,7 @@ return {
   -- Add catppuccin
   {
     "catppuccin/nvim",
-    name = "catppuccin",
+    name = "catppuccin-nvim",
     priority = 1000,
     opts = {
       -- You can customize flavour:  "latte", "frappe", "macchiato", "mocha"
