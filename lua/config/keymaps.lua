@@ -19,8 +19,8 @@ km.del("n", "<C-Left>")
 km.del("n", "<C-Right>")
 km.set("n", "<A-Up>", "<cmd>resize +2<cr>", vim.tbl_extend("force", opts, { desc = "Increase Window Height" }))
 km.set("n", "<A-Down>", "<cmd>resize -2<cr>", vim.tbl_extend("force", opts, { desc = "Decrease Window Height" }))
-km.set("n", "<A-Left>", "<cmd>vertical resize -2<cr>", vim.tbl_extend("force", opts, { desc = "Decrease Window Width" }))
-km.set("n", "<A-Right>", "<cmd>vertical resize +2<cr>", vim.tbl_extend("force", opts, { desc = "Increase Window Width" }))
+km.set("n", "<A-Right>", "<cmd>vertical resize -2<cr>", vim.tbl_extend("force", opts, { desc = "Decrease Window Width" }))
+km.set("n", "<A-Left>", "<cmd>vertical resize +2<cr>", vim.tbl_extend("force", opts, { desc = "Increase Window Width" }))
 --#endregion
 --#region escapes
 km.set("t", "<Esc><Esc>", [[<C-\><C-n>]], vim.tbl_extend("force", opts, { desc = "Exit terminal mode" }))
