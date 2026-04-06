@@ -9,3 +9,4 @@ if LazyVim.is_win() then
   end
 end
 vim.g.root_spec = { "cwd" }
+vim.opt.title = true
