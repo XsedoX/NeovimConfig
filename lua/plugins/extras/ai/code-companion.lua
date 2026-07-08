@@ -28,7 +28,7 @@ return {
               },
               schema = {
                 model = {
-                  default = "qwen3.5:9b",
+                  default = "qwen3-coder:30b",
                   choices = { "qwen3.5:4b", "qwen3.5:9b", "qwen3-coder:30b" },
                 },
               },
