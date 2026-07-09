@@ -2,15 +2,17 @@ return {
   -- 1. MCP Hub (Manages the Context7 Server)
   {
     "ravitemer/mcphub.nvim",
+    lazy = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     build = "bun install -g mcp-hub@latest",
     config = function()
-      require("mcphub").setup({ port = 37373 })
+      require("mcphub").setup()
     end,
   },
   -- 2. CodeCompanion (The Chat Interface)
   {
     "olimorris/codecompanion.nvim",
+    lazy = false,
     desc = "CodeCompanion AI Chat (Custom Extra)", -- Shows up in the LazyExtras menu
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -42,6 +44,16 @@ return {
         chat = { adapter = "qwen" },
         inline = { adapter = "qwen" },
         agent = { adapter = "qwen", tools = { "mcp" } },
+      },
+      extensions = {
+        mcphub = {
+          callback = "mcphub.extensions.codecompanion",
+          opts = {
+            make_tools = true,
+            show_server_tools_in_chat = true,
+            show_result_in_chat = true,
+          },
+        },
       },
     },
     keys = {
