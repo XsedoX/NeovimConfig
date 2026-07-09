@@ -5,9 +5,7 @@ return {
     lazy = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     build = "bun install -g mcp-hub@latest",
-    config = function()
-      require("mcphub").setup()
-    end,
+    opts = {},
   },
   -- 2. CodeCompanion (The Chat Interface)
   {
@@ -20,6 +18,17 @@ return {
       "ravitemer/mcphub.nvim",
     },
     opts = {
+      extensions = {
+        mcphub = {
+          callback = "mcphub.extensions.codecompanion",
+          opts = {
+            make_vars = false,
+            make_tools = true,
+            show_server_tools_in_chat = true,
+            show_result_in_chat = true,
+          },
+        },
+      },
       -- 1. Put the custom adapter inside the 'http' table!
       adapters = {
         http = {
@@ -31,8 +40,18 @@ return {
               },
               schema = {
                 model = {
-                  default = "qwen3-coder:30b",
+                  default = "qwen3.5:9b",
                   choices = { "qwen3.5:4b", "qwen3.5:9b", "qwen3-coder:30b" },
+                },
+              },
+            })
+          end,
+          openrouter = function()
+            return require("codecompanion.adapters").extend("openrouter", {
+              name = "openrouter",
+              schema = {
+                model = {
+                  default = "nvidia/nemotron-3-super-120b-a12b:free",
                 },
               },
             })
@@ -41,24 +60,16 @@ return {
       },
       -- 2. Tell the plugin to use it (using the new interactions table)
       interactions = {
-        chat = { adapter = "qwen" },
-        inline = { adapter = "qwen" },
-        agent = { adapter = "qwen", tools = { "mcp" } },
-      },
-      extensions = {
-        mcphub = {
-          callback = "mcphub.extensions.codecompanion",
-          opts = {
-            make_tools = true,
-            show_server_tools_in_chat = true,
-            show_result_in_chat = true,
-          },
-        },
+        background = { adapter = "qwen", model = "qwen3.5:4b" },
+        inline = { adapter = "qwen", model = "qwen3.5:9b" },
+        chat = { adapter = "openrouter" },
+        agent = { adapter = "openrouter", model = "minimax/minimax-m3" },
       },
     },
     keys = {
-      { "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "Toggle AI Chat" },
-      { "<leader>ae", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add Code to AI Chat" },
+      { "<leader>at", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "Toggle AI Chat" },
+      { "<leader>ai", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add Code to AI Chat" },
+      { "<leader>aa", "<cmd>CodeCompanionActions<cr>", desc = "CodeCompanion Actions" },
     },
   },
 }
