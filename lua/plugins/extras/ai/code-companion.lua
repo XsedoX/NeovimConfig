@@ -15,6 +15,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
+      "ravitemer/mcphub.nvim",
     },
     opts = {
       -- 1. Put the custom adapter inside the 'http' table!
