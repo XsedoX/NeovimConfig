@@ -5,10 +5,10 @@ local km = vim.keymap
 local opts = { noremap = true, silent = true }
 
 --#region scrolling
-km.set("n", "<c-d>", "<c-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll half down (centered)" }))
-km.set("v", "<c-d>", "<c-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll half down (centered)" }))
-km.set("v", "<c-u>", "<c-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll half up (centered)" }))
-km.set("n", "<c-u>", "<c-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll half up (centered)" }))
+-- km.set("n", "<c-d>", "<c-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll half down (centered)" }))
+-- km.set("v", "<c-d>", "<c-d>zz", vim.tbl_extend("force", opts, { desc = "Scroll half down (centered)" }))
+-- km.set("v", "<c-u>", "<c-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll half up (centered)" }))
+-- km.set("n", "<c-u>", "<c-u>zz", vim.tbl_extend("force", opts, { desc = "Scroll half up (centered)" }))
 km.set("n", "G", "Gzz", vim.tbl_extend("force", opts, { desc = "Go to the end of the file (centered)" }))
 km.set("v", "G", "Gzz", vim.tbl_extend("force", opts, { desc = "Go to the end of the file (centered)" }))
 --#endregion

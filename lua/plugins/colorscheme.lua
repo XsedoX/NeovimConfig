@@ -7,6 +7,7 @@ return {
     opts = {
       -- You can customize flavour:  "latte", "frappe", "macchiato", "mocha"
       flavour = "mocha",
+      integrations = { leap = true },
     },
   },
 
