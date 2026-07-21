@@ -23,9 +23,30 @@ return {
         "MeanderingProgrammer/render-markdown.nvim",
         ft = { "codecompanion", "codecompanion_input" },
       },
+      "xinghe98/codecompanion-model-selector.nvim",
     },
     opts = {
       extensions = {
+        model_selector = {
+          opts = {
+            default_adapter = "openrouter",
+            adapters = {
+              openrouter = {
+                base = "openrouter",
+                env = {
+                  url = "https://openrouter.ai/api/v1",
+                  api_ket = os.getenv("OPENROUTER_API_KEY"),
+                  chat_url = "/chat/completions",
+                },
+                default = "openrouter/free",
+                choices = { "openrouter/free", "minimax/minimax-m3", "openrouter/pareto-code" },
+              },
+              copilot = {
+                base = "copilot",
+              },
+            },
+          },
+        },
         mcphub = {
           callback = "mcphub.extensions.codecompanion",
           opts = {
@@ -39,39 +60,10 @@ return {
           enabled = true,
         },
       },
-      -- 1. Put the custom adapter inside the 'http' table!
-      adapters = {
-        http = {
-          qwen = function()
-            return require("codecompanion.adapters").extend("ollama", {
-              name = "qwen",
-              env = {
-                url = "http://192.168.122.1:11434",
-              },
-              schema = {
-                model = {
-                  default = "qwen3.5:9b",
-                  choices = { "qwen3.5:4b", "qwen3.5:9b", "qwen3-coder:30b" },
-                },
-              },
-            })
-          end,
-          openrouter = function()
-            return require("codecompanion.adapters").extend("openrouter", {
-              name = "openrouter",
-              schema = {
-                model = {
-                  default = "nvidia/nemotron-3-super-120b-a12b:free",
-                },
-              },
-            })
-          end,
-        },
-      },
       -- 2. Tell the plugin to use it (using the new interactions table)
       interactions = {
-        background = { adapter = "qwen", model = "qwen3.5:4b" },
-        inline = { adapter = "qwen", model = "qwen3.5:9b" },
+        background = { adapter = "openrouter", model = "openrouter/free" },
+        inline = { adapter = "openrouter", model = "openrouter/free" },
         chat = { adapter = "openrouter" },
         agent = { adapter = "openrouter", model = "minimax/minimax-m3" },
       },
@@ -80,6 +72,7 @@ return {
       { "<leader>at", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "Toggle AI Chat" },
       { "<leader>ai", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add Code to AI Chat" },
       { "<leader>aa", "<cmd>CodeCompanionActions<cr>", desc = "CodeCompanion Actions" },
+      { "<leader>am", "<cmd>CCSelectModel<cr>", desc = "CodeCompanion Model Selection" },
     },
   },
 }
