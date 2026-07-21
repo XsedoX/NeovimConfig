@@ -16,6 +16,13 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "ravitemer/mcphub.nvim",
+      "mrjones2014/codecompanion-ui.nvim",
+      {
+        -- optional, but highly recommended
+        -- `render-markdown.nvim` will auto-attach to lazy.nvim `ft` filetypes
+        "MeanderingProgrammer/render-markdown.nvim",
+        ft = { "codecompanion", "codecompanion_input" },
+      },
     },
     opts = {
       extensions = {
@@ -27,6 +34,9 @@ return {
             show_server_tools_in_chat = true,
             show_result_in_chat = true,
           },
+        },
+        ui = {
+          enabled = true,
         },
       },
       -- 1. Put the custom adapter inside the 'http' table!
