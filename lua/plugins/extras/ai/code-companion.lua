@@ -23,9 +23,13 @@ return {
         "MeanderingProgrammer/render-markdown.nvim",
         ft = { "codecompanion", "codecompanion_input" },
       },
+      "ravitemer/codecompanion-history.nvim",
     },
     opts = {
       extensions = {
+        history = {
+          enabled = true,
+        },
         mcphub = {
           callback = "mcphub.extensions.codecompanion",
           opts = {
