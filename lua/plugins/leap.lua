@@ -1,8 +1,8 @@
 return {
   url = "https://codeberg.org/andyg/leap.nvim.git",
   keys = {
-    { "s", "<Plug>(leap)", mode = { "n", "x", "o" }, desc = "Leap forward to" },
-    { "S", "<Plug>(leap-from-window)", mode = { "n", "x", "o" }, desc = "Leap from windows" },
+    { "s", "<Plug>(leap)", mode = { "n", "x", "o" }, desc = "Leap" },
+    { "S", "<Plug>(leap-from-window)", mode = { "n", "x", "o" }, desc = "Leap from window" },
   },
   config = function(_, opts)
     local leap = require("leap")
