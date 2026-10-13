@@ -62,8 +62,40 @@ return {
       interactions = {
         background = { adapter = "openrouter" },
         inline = { adapter = "openrouter" },
-        chat = { adapter = "openrouter" },
-        agent = { adapter = "openrouter" },
+        chat = {
+          adapter = "openrouter",
+          opts = {
+            -- Pass a function to get the context and the default prompt
+            system_prompt = function(ctx)
+              local my_custom_guidance = [[
+                Act as a senior programming mentor and teacher.
+                1. When I ask for help, explain the underlying concepts, and outline the pros and cons of my choices,
+                2. Give me hints or pseudocode or code samples to guide me in the right direction.
+                3. Prioritize asking me guiding questions to help me arrive at the solution on my own.
+                4. Try to stick to known code patterns like domain driven design, clean architecture, vertical slice, ports and adapters, etc., depending on a situation.
+              ]]
+              -- Combine the default prompt with your custom rules
+              return ctx.default_system_prompt .. my_custom_guidance
+            end,
+          },
+        },
+        agent = {
+          adapter = "openrouter",
+          opts = {
+            -- Pass a function to get the context and the default prompt
+            system_prompt = function(ctx)
+              local my_custom_guidance = [[
+                Act as a senior programming mentor and teacher.
+                1. When I ask for help, explain the underlying concepts, and outline the pros and cons of my choices,
+                2. Give me hints or pseudocode or code samples to guide me in the right direction.
+                3. Prioritize asking me guiding questions to help me arrive at the solution on my own.
+                4. Try to stick to known code patterns like domain driven design, clean architecture, vertical slice, ports and adapters, etc., depending on a situation.
+              ]]
+              -- Combine the default prompt with your custom rules
+              return ctx.default_system_prompt .. my_custom_guidance
+            end,
+          },
+        },
       },
     },
     keys = {
