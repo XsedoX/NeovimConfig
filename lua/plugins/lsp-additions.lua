@@ -9,4 +9,17 @@ return {
       require("lsp-file-operations").setup()
     end,
   },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      capabilities = {
+        workspace = {
+          fileOperations = {
+            didRename = true,
+            willRename = true,
+          },
+        },
+      },
+    },
+  },
 }
