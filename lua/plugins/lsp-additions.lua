@@ -12,11 +12,15 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = {
-      capabilities = {
-        workspace = {
-          fileOperations = {
-            didRename = true,
-            willRename = true,
+      servers = {
+        ["*"] = {
+          capabilities = {
+            workspace = {
+              fileOperations = {
+                didRename = true,
+                willRename = true,
+              },
+            },
           },
         },
       },
