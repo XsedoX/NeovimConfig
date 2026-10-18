@@ -13,15 +13,18 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    opts = function(_, opts)
-      local file_ops_caps = require("lsp-file-operations").default_capabilities()
-      opts.servers = opts.servers or {}
-      opts.servers["*"] = opts.servers["*"] or {}
-      opts.servers["*"].capabilities = vim.tbl_deep_extend(
-        "force",
-        opts.servers["*"].capabilities or {},
-        file_ops_caps
-      )
-    end,
-  },
+    opts = {
+      servers = {
+        ["*"] = {
+          capabilities = {
+            workspace = {
+              fileOperations = {
+                didRename = true,
+                willRename = true,
+              },
+            },
+          },
+        },
+      },
+    }
 }
