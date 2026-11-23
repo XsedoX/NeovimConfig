@@ -60,10 +60,10 @@ return {
       },
       -- 2. Tell the plugin to use it (using the new interactions table)
       interactions = {
-        background = { adapter = "openrouter" },
-        inline = { adapter = "openrouter" },
+        background = { adapter = "copilot" },
+        inline = { adapter = "copilot" },
         chat = {
-          adapter = "openrouter",
+          adapter = "copilot",
           opts = {
             -- Pass a function to get the context and the default prompt
             system_prompt = function(ctx)
@@ -80,7 +80,7 @@ return {
           },
         },
         agent = {
-          adapter = "openrouter",
+          adapter = "copilot",
           opts = {
             -- Pass a function to get the context and the default prompt
             system_prompt = function(ctx)
